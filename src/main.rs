@@ -3,12 +3,11 @@ use std::fs;
 use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
 use clap::Parser;
 use rcli::{
-    get_content, get_reader, process_csv, process_decode, process_encode, process_genpass,
-    process_text_key_generate, process_text_sign, process_text_verify, Base64SubCommand, Opts,
-    SubCommand, TextSubCommand,
+    get_content, get_reader, process_csv, process_decode, process_encode, process_genpass, process_http_serve, process_text_key_generate, process_text_sign, process_text_verify, Base64SubCommand, HttpSubCommand, Opts, SubCommand, TextSubCommand
 };
-use zxcvbn::zxcvbn;
-fn main() -> anyhow::Result<()> {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    tracing_subscriber::fmt::init();
     let opts = Opts::parse();
     match opts.cmd {
         SubCommand::Csv(opts) => {
@@ -21,7 +20,7 @@ fn main() -> anyhow::Result<()> {
         }
         SubCommand::GenPass(opts) => {
             //let password = rcli::gen_password(opts.length, opts.uppercase, opts.lowercase, opts.number);
-            let ret = process_genpass(
+            let _ret = process_genpass(
                 opts.length,
                 opts.uppercase,
                 opts.lowercase,
@@ -69,6 +68,25 @@ fn main() -> anyhow::Result<()> {
                 }
             }
         },
+        SubCommand::Http(cmd) => match cmd {
+            HttpSubCommand::Serve(opts) => {
+                process_http_serve(opts.dir, opts.port).await?;
+            }
+        } 
+        //email validation regex that '?flightcentre.ca' can't pass
+        //SubCommand::Email(cmd) => match cmd {         
+        //    EmailSubCommand::Validate(opts) => {
+        //        let email = opts.email;
+        //        let re = Regex::new(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$").unwrap();
+        //        if re.is_match(&email) {
+        //            println!("{} is a valid email", email);
+        //        } else {
+        //            println!("{} is not a valid email", email);
+        //        }
+        //    }
+        //}
+        
+        
     }
     Ok(())
 }

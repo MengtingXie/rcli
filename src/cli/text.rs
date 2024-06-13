@@ -1,7 +1,5 @@
 use std::{fmt, path::PathBuf, str::FromStr};
-
 use clap::Parser;
-
 use super::{verify_file, verify_path};
 
 #[derive(Debug, Parser)]
