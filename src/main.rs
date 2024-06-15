@@ -35,10 +35,14 @@ async fn main() -> anyhow::Result<()> {
         }
         SubCommand::Base64(cmd) => match cmd {
             Base64SubCommand::Encode(opts) => {
-                process_encode(&opts.input, opts.format)?;
+                let mut reader = get_reader(&opts.input)?;
+                let ret = process_encode(&mut reader, opts.format)?;
+                println!("{}", ret);
             }
             Base64SubCommand::Decode(opts) => {
-                process_decode(&opts.input, opts.format)?;
+                let mut reader = get_reader(&opts.input)?;
+                let ret = process_decode(&mut reader, opts.format)?;
+                println!("{}", ret);
             }
         },
         SubCommand::Text(cmd) => match cmd {
@@ -73,18 +77,15 @@ async fn main() -> anyhow::Result<()> {
                 process_http_serve(opts.dir, opts.port).await?;
             }
         } 
-        //email validation regex that '?flightcentre.ca' can't pass
-        //SubCommand::Email(cmd) => match cmd {         
+        //email validation regex that '?flightcentre.ca' can't pass and compliant to RFC 5322
+        //SubCommand::Email(cmd) => match cmd {
         //    EmailSubCommand::Validate(opts) => {
         //        let email = opts.email;
         //        let re = Regex::new(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$").unwrap();
         //        if re.is_match(&email) {
         //            println!("{} is a valid email", email);
-        //        } else {
-        //            println!("{} is not a valid email", email);
-        //        }
-        //    }
-        //}
+            
+
         
         
     }

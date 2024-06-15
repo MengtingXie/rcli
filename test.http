@@ -1,3 +1,8 @@
-### Test index page
+### Test static file
 
-GET http://localhost:8080/Cargo.toml
+GET http://localhost:8086/Cargo.toml
+//Accept-Encoding: zstd
+//Range: bytes=0-100
+### Test static file with tower
+
+GET http://localhost:8086/tower/fixtures/ed25519.pk
