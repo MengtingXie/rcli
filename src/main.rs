@@ -76,7 +76,7 @@ async fn main() -> anyhow::Result<()> {
             HttpSubCommand::Serve(opts) => {
                 process_http_serve(opts.dir, opts.port).await?;
             }
-        } 
+        }
         //email validation regex that '?flightcentre.ca' can't pass and compliant to RFC 5322
         //SubCommand::Email(cmd) => match cmd {
         //    EmailSubCommand::Validate(opts) => {
@@ -84,10 +84,10 @@ async fn main() -> anyhow::Result<()> {
         //        let re = Regex::new(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$").unwrap();
         //        if re.is_match(&email) {
         //            println!("{} is a valid email", email);
-            
 
-        
-        
+
+
+
     }
     Ok(())
 }
