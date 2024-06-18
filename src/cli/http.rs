@@ -1,6 +1,9 @@
+use crate::{process_http_serve, CmdExecutor};
+
+use super::verify_path;
 use std::path::PathBuf;
 use clap::Parser;
-use super::verify_path;
+
 
 #[derive(Debug, Parser)]
 pub enum HttpSubCommand {
@@ -14,4 +17,19 @@ pub struct HttpServeOpts {
     pub dir: PathBuf,
     #[arg(short, long, default_value_t = 8086)]
     pub port: u16,
+}
+
+
+impl CmdExecutor for HttpServeOpts {
+    async fn execute(self) -> anyhow::Result<()> {
+        process_http_serve(self.dir, self.port).await
+    }
+}
+
+impl CmdExecutor for HttpSubCommand {
+    async fn execute(self) -> anyhow::Result<()> {
+        match self {
+            HttpSubCommand::Serve(opts) => opts.execute().await,
+        }
+    }
 }

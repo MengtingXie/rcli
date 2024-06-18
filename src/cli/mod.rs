@@ -4,6 +4,8 @@ mod genpass;
 mod text;
 mod http;
 
+use crate::CmdExecutor;
+
 use self::{csv::CsvOpts, genpass::GenPassOpts};
 use clap::Parser;
 use std::path::{Path, PathBuf};
@@ -34,6 +36,18 @@ pub enum SubCommand {
     Text(TextSubCommand),
     #[command(subcommand)]
     Http(HttpSubCommand),
+}
+
+impl CmdExecutor for SubCommand {
+    async fn execute(self) -> anyhow::Result<()> {
+        match self {
+            SubCommand::Csv(opts) => opts.execute().await,
+            SubCommand::GenPass(opts) => opts.execute().await,
+            SubCommand::Base64(opts) => opts.execute().await,
+            SubCommand::Text(opts) => opts.execute().await,
+            SubCommand::Http(opts) => opts.execute().await,
+        }
+    }
 }
 
 fn verify_file(filename: &str) -> Result<String, &'static str> {
